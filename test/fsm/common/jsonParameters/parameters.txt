@@ -1,0 +1,22 @@
+{
+  "long": 1,
+  "double": 3.1456789124,
+  "boolean": true,
+  "string": "string",
+  "intarray": [0, 1, 2],
+  "boolarray": [true, false],
+  "struct": {
+    "string": "string2",
+    "doublearray": [0.1, 0.2]
+  },
+  "structarray": [
+    {
+      "long": 3,
+      "double": 2.1
+    },
+    {
+      "boolean": true,
+      "stringarray": ["a","b"]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"struct":{"string":"string2","doublearray":[0.1,0.2]},"boolean":true,"string":"string","double":3.1456789124,"structarray":[{"double":2.1,"long":3},{"boolean":true,"stringarray":["a","b"]}],"intarray":[0,1,2],"long":1,"boolarray":[true,false]}
