@@ -2,8 +2,6 @@ package fsm.common.jsonParameters;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Test;
 
 import fsm.common.Log;
