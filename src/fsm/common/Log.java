@@ -1,9 +1,10 @@
 package fsm.common;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -14,15 +15,24 @@ public class Log extends Formatter
 {
    static Logger LOGGER = Logger.getLogger(Log.class.getName());
    
-   public static void Init()
+   public static void Init(File logFile)
    {
-      LOGGER.addHandler(new ConsoleHandler());
+      LOGGER.addHandler(new LocalConsole());
+      System.out.println("Console logger initialized ...");
+      try
+      {
+         LOGGER.addHandler(new FileHandler(logFile.getAbsolutePath(), true));
+         System.out.println("File logger initialized [" + logFile.getAbsolutePath() + "] ...");
+      }
+      catch(Exception e)
+      {
+         System.out.println("File logger failed [" + logFile.getAbsolutePath() + "] ...");
+      }
       Handler[] handlers = LOGGER.getHandlers();
       for ( Handler hand : handlers )
       {
          hand.setFormatter(new Log());
       }
-      System.out.println("Logger initialized");
    }
    
    public static void fine(String msg)
@@ -55,15 +65,15 @@ public class Log extends Formatter
       logMessage(Level.SEVERE, msg, t);
    }
    
+   // --- PRIVATE
+   
    private static void logMessage(Level level, String message, Throwable t)
    {
-      String fullClassName = Thread.currentThread().getStackTrace()[3].getClassName();
-      String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-      String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
+      String fileName = Thread.currentThread().getStackTrace()[3].getFileName();
       int lineNumber = Thread.currentThread().getStackTrace()[3].getLineNumber();
       
       LogRecord record = new LogRecord(level, 
-                                       className + "." + methodName + "()[" + lineNumber + "] " + message);
+         fileName.replaceFirst(".java", "") + "[" + lineNumber + "] " + message);
       record.setThrown(t);
 
       for ( Handler hand : LOGGER.getHandlers() )
@@ -101,5 +111,26 @@ public class Log extends Formatter
       }   
 
       return sb.toString();
+   }
+   
+   private static class LocalConsole extends Handler
+   {
+
+      @Override
+      public void publish(LogRecord record)
+      {
+         System.out.print(getFormatter().format(record));         
+      }
+
+      @Override
+      public void flush()
+      {
+      }
+
+      @Override
+      public void close() throws SecurityException
+      {
+         System.out.println("Console logger done.");
+      }      
    }
 }
