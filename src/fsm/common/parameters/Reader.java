@@ -14,6 +14,7 @@ public class Reader
 {
    public Reader struct(String key)
    {
+      verbose_ = true;
       Object object = currStruct_.struct.get(key);
       if ( object == null || object instanceof Struct )
       {
@@ -21,7 +22,7 @@ public class Reader
       }
       else
       {
-         Log.severe("Failed to enter struct [" + key + "]");
+         if (verbose_) Log.severe("Failed to enter struct [" + key + "]");
       }
       return this;      
    }
@@ -41,7 +42,7 @@ public class Reader
       }
       else
       {
-         Log.severe("Failed to enter structarray [" + key + "]");
+         if (verbose_) Log.severe("Failed to enter structarray [" + key + "]");
          return new Reader[0];
       }   
    }
@@ -105,7 +106,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof String) )
       {
-         Log.severe("Failed to get string value for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get string value for [" + key + "]");
          return defaultValue;
       }
       return (String) object;
@@ -116,7 +117,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof Boolean) )
       {
-         Log.severe("Failed to get boolean value for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get boolean value for [" + key + "]");
          return defaultValue;
       }
       return (Boolean) object;
@@ -127,7 +128,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof Long) )
       {
-         Log.severe("Failed to get long value for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get long value for [" + key + "]");
          return defaultValue;
       }
       return (Long) object;
@@ -138,7 +139,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof Double) )
       {
-         Log.severe("Failed to get double value for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get double value for [" + key + "]");
          return defaultValue;
       }
       return (Double) object;
@@ -149,7 +150,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof StringArray) )
       {
-         Log.severe("Failed to get string array for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get string array for [" + key + "]");
          return new String[0];
       }
       else
@@ -164,7 +165,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof BooleanArray) )
       {
-         Log.severe("Failed to get boolean array for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get boolean array for [" + key + "]");
          return new boolean[0];
       }
       else
@@ -179,7 +180,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof LongArray) )
       {
-         Log.severe("Failed to get long array for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get long array for [" + key + "]");
          return new long[0];
       }
       else
@@ -194,7 +195,7 @@ public class Reader
       Object object = currStruct_.struct.get(key);
       if ( object == null || !(object instanceof DoubleArray) )
       {
-         Log.severe("Failed to get double array for [" + key + "]");
+         if (verbose_) Log.severe("Failed to get double array for [" + key + "]");
          return new double[0];
       }
       else
@@ -202,6 +203,11 @@ public class Reader
          DoubleArray array = (DoubleArray) object;
          return array.array_.clone();
       }
+   }
+   
+   public void setVerbose(boolean verbose)
+   {
+      verbose_ = verbose;
    }
    
    // --- PACKAGE PROTECTED
@@ -214,5 +220,6 @@ public class Reader
    // --- PRIVATE
    
    private Struct currStruct_;
+   private boolean verbose_;
 
 }
