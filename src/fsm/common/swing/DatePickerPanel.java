@@ -1,4 +1,4 @@
-package csm.common.swing;
+package fsm.common.swing;
 
 import java.awt.GridLayout;
 import java.text.DateFormatSymbols;
