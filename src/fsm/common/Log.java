@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class Log extends Formatter
 {
-   static Logger LOGGER = Logger.getLogger(Log.class.getName());
+   static Logger LOGGER = Logger.getLogger(Log.class.getName());  
    
    public static void Init(File logFile)
    {
