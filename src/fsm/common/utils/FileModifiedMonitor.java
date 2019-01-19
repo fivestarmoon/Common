@@ -35,26 +35,45 @@ public class FileModifiedMonitor implements Runnable
          }
          try
          {
-            Thread.sleep(1500);
+            Thread.sleep(1000);
          }
          catch (InterruptedException e)
          {
          }
       }
-      FileModifiedListener fileModifiedListener = fileModifiedListener_;
+      
+      // Attempt to call the listener
+      FileModifiedListener fileModifiedListener = null;
+      synchronized(file_)
+      {
+         fileModifiedListener = fileModifiedListener_;
+      }
       if ( fileModifiedListener != null )
       {
          fileModifiedListener.fileModified();
          Log.info("File " + file_.getName() + " modified, listener called and stopped");
-         return;
       }
-      Log.info("File " + file_.getName() + " modified monitor aborted");
+      else
+      {
+         Log.info("File " + file_.getName() + " modified monitor aborted"); 
+      }
       
+      // Cleanup
+      fileModifiedListener_ = null;
+      file_ = null;
    }  
    public void stop()
    {
-      fileModifiedListener_ = null;
-   }    
+      File file = file_;
+      if ( file == null )
+      {
+         return;
+      }
+      synchronized(file)
+      {
+         fileModifiedListener_ = null;
+      }
+   }
    private File file_;
    private FileModifiedListener fileModifiedListener_;
 }
