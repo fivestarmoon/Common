@@ -3,6 +3,7 @@ package fsm.common.jsonParameters;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,29 +12,30 @@ import fsm.common.parameters.Parameters;
 import fsm.common.parameters.Reader;
 import fsm.common.parameters.Writer;
 
-class TestParameters
+class JsonParametersTest
 {
    @Test
-   void testReader()
+   void testReader() throws IOException
    {
-      Log.Init(new File("log.txt"));
+      Log.Init(File.createTempFile("JsonParametersTest-", ".log"));
       System.out.println("Starting testReader ...");
-      validate("parameters.txt");
+      validate("test/fsm/common/jsonParameters/parameters.txt");
       System.out.println("Done.");
    }
    
    @Test
-   void testWriter()
+   void testWriter() throws IOException
    {
       System.out.println("Starting testWriter ...");
-      Parameters params = new Parameters("temp.txt", false);
+      String tempFile = File.createTempFile("JsonParametersTest-", ".txt").getAbsolutePath();
+      Parameters params = new Parameters(tempFile, false);
       params.write();
       
       // Ensure the file is empty
-      Parameters paramsTemp = new Parameters("temp.txt", true);
+      Parameters paramsTemp = new Parameters(tempFile, true);
       assertEquals(0, paramsTemp.getReader().getKeySet().length);
       
-      System.out.println("  writing temp.txt ...");
+      System.out.println("  writing "+ tempFile + " ...");
       Writer writer = params.getWriter();
       writer.setValue("long", 1);
       writer.setValue("double", 3.1456789124);
@@ -55,7 +57,7 @@ class TestParameters
       
       params.write();
       System.out.println("  write completed.");
-      validate("temp.txt");
+      validate(tempFile);
       System.out.println("Done.");
    }
    
