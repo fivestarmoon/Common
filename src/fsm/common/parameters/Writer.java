@@ -30,17 +30,17 @@ public class Writer
    
    public void setValue(String key, boolean value) 
    {
-      currStruct_.struct.put(key, new Boolean(value));
+      currStruct_.struct.put(key, Boolean.valueOf(value));
    }
    
    public void setValue(String key, long value) 
    {
-      currStruct_.struct.put(key, new Long(value));
+      currStruct_.struct.put(key, Long.valueOf(value));
    }
    
    public void setValue(String key, double value) 
    {
-      currStruct_.struct.put(key, new Double(value));
+      currStruct_.struct.put(key, Double.valueOf(value));
    }
    
    public void setArrayOfValues(String key, String[] value) 

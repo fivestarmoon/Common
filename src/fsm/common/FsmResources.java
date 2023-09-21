@@ -14,14 +14,18 @@ public class FsmResources
    {
 
       BufferedImage img = null;
-      try
+      URL imgURL = FsmResources.class.getResource("resources/" + imageName);
+      if ( imgURL != null )
       {
-         img = ImageIO.read(FsmResources.class.getResource("resources/" + imageName));
-      }
-      catch (IOException e)
-      {
-          e.printStackTrace();
-          return null;
+         try
+         {
+            img = ImageIO.read(FsmResources.class.getResource("resources/" + imageName));
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+            return null;
+         }
       }
       return img;
    }
