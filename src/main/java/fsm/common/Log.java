@@ -3,7 +3,9 @@ package fsm.common;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -40,14 +42,29 @@ public class Log extends Formatter
       logMessage(Level.FINE, msg, null);
    }
    
+   public static void fine(String format, Object... args)
+   {
+      logMessage(Level.FINE, String.format(format, args), null);
+   }
+   
    public static void info(String msg)
    {
       logMessage(Level.INFO, msg, null);
    }
    
+   public static void info(String format, Object... args)
+   {
+      logMessage(Level.INFO, String.format(format, args), null);
+   }
+   
    public static void severe(String msg)
    {
       logMessage(Level.SEVERE, msg, null);
+   }
+   
+   public static void severe(String format, Object... args)
+   {
+      logMessage(Level.SEVERE, String.format(format, args), null);
    }
    
    public static void fine(String msg, Throwable t)
@@ -72,8 +89,15 @@ public class Log extends Formatter
       String fileName = Thread.currentThread().getStackTrace()[3].getFileName();
       int lineNumber = Thread.currentThread().getStackTrace()[3].getLineNumber();
       
-      LogRecord record = new LogRecord(level, 
-         fileName.replaceFirst(".java", "") + "[" + lineNumber + "] " + message);
+      LogRecord record;
+      if ( t != null || level == Level.WARNING || level == Level.SEVERE )
+      {
+         record = new LogRecord(level, fileName + " line " + lineNumber + ": " + message);
+      }
+      else
+      {
+         record = new LogRecord(level, message);
+      }
       record.setThrown(t);
 
       for ( Handler hand : LOGGER.getHandlers() )
@@ -85,12 +109,13 @@ public class Log extends Formatter
    @Override
    public String format(LogRecord record)
    {
+      String logLevel = String.format("%-3.3s", record.getLevel().getLocalizedName());
       StringBuilder sb = new StringBuilder();
 
-      sb.append(new Date(record.getMillis()))
-      .append(" ")
-      .append(record.getLevel().getLocalizedName())
-      .append(": ")
+      sb.append(LocalDateTime.now().format(formatter_s))
+      .append(" [")
+      .append(logLevel)
+      .append("] ")
       .append(formatMessage(record))
       .append("\n");
 
@@ -133,4 +158,6 @@ public class Log extends Formatter
          System.out.println("Console logger done.");
       }      
    }
+   
+   private static DateTimeFormatter formatter_s = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
 }
